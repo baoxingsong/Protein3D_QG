@@ -1,7 +1,30 @@
 ## Pre-processing
 
 
-#GRM: GRM (genetic relationship matrix) is produced by PlINK, ```plink --bfile NAM_v5_PHGv1_all_chroms_vcftools_wanted --recode12 --output-missing-genotype 0 --transpose --out snp```  
+#kinship matrix is produced using the emmax-kin command from the emmax package:
+
+```plink2 --vcf NAM_v5_PHGv1_all_chroms_vcftools_wanted.vcf --max-alleles 2 --make-bed --out NAM_v5_PHGv1_all_chroms_vcftools_wanted```
+
+Assign family ID
+
+```
+cat NAM_v5_PHGv1_all_chroms_vcftools_wanted.fam | awk '{print($2" "$2" "$3" "$4" "$5" "$6)}' > temp.fam
+mv temp.fam NAM_v5_PHGv1_all_chroms_vcftools_wanted.fam
+```
+
+Assign SNP ID
+```
+cat NAM_v5_PHGv1_all_chroms_vcftools_wanted.bim | awk '{print($1"\t"$1"_"$4"\t"$3"\t"$4"\t"$5"\t"$6)}'  > temp.header.bim
+mv temp.header.bim NAM_v5_PHGv1_all_chroms_vcftools_wanted.bim
+```
+
+
+```plink --bfile NAM_v5_PHGv1_all_chroms_vcftools_wanted --recode12 --output-missing-genotype 0 --transpose --out snp```
+
+```emmax-kin -v -h -d 10 snp```
+
+
+
 
 
 Multiple sequence alignment or multiple structure alignment and similarity matrix for each pan-gene (python)  
